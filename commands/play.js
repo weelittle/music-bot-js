@@ -13,7 +13,8 @@ module.exports = {
             option
                 .setName('query')
                 .setDescription('input search/url/playlist_url')
-                .setRequired(true)),
+                .setRequired(true))
+        .setDMPermission(false),
     async execute(inter) {
         if (!inter.member.voice.channel) {
             return await inter.reply({content: 'you must be in a voice channel', ephemeral: true});

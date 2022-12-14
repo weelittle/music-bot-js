@@ -8,7 +8,8 @@ module.exports = {
             option
                 .setName('destination')
                 .setDescription('num in queue you want to skip to')
-                .setRequired(true)),
+                .setRequired(true))
+        .setDMPermission(false),
     async execute(inter) {
         const client = inter.client
         const player = client.player

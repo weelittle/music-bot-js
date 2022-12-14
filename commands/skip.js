@@ -3,7 +3,8 @@ const { SlashCommandBuilder, PermissionsBitField } = require('discord.js')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('vote to skip for the currently playing song'),
+        .setDescription('vote to skip for the currently playing song')
+        .setDMPermission(false),
     async execute(inter) {
         const client = inter.client
         const player = client.player

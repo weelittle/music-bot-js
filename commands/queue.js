@@ -7,7 +7,8 @@ function sleep(ms) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
-        .setDescription('check the queue for this server (interaction expires in 1 minute)'),
+        .setDescription('check the queue for this server (interaction expires in 1 minute)')
+        .setDMPermission(false),
     async execute(inter) {
         const client = inter.client
         const player = client.player
