@@ -87,7 +87,7 @@ module.exports = {
                     const title = '`' + track.title + '`'
                     const author = '`' + track.author + '`'
                     const duration = '`' + track.duration + '`'
-                    msg += `${i+1+offset} - ${title} ${duration} [link](${track.url})\nauthor: ${author}\n`
+                    msg += `${i+1} - ${title} ${duration} [link](${track.url})\nauthor: ${author}\n`
                 }
 
                 return msg
@@ -120,6 +120,15 @@ module.exports = {
             var listener = async interaction => {
                 if (responded) return
                 if (!interaction.isButton()) return
+
+                if (inter.user !== interaction.user) {
+                    try {
+                        interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
+                    } catch (err) {
+                        console.log(err)
+                    }
+                    return
+                }
 
                 for (const x of buttonText) {
                     const cid = interaction.customId

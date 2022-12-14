@@ -22,7 +22,6 @@ module.exports = {
         }
         
         if (!queue.skips) {
-            console.log('skips not found, creating...')
             queue.skips = []
         }
 
@@ -30,11 +29,9 @@ module.exports = {
             return await inter.reply({content: 'you have already voted to skip', ephemeral: true})
         }
 
-        const vc_size = inter.guild.members.me.voice.channel.members.size-1
-        let max_skips = 3
-        if (vc_size < 3) {
-            max_skips = 1
-        }
+        
+        const vc_size = inter.guild.members.me.voice.channel.members.filter(x => !x.user.bot).size
+        let max_skips = vc_size < 2 ? 1 : Math.floor(vc_size*(2/3)) //meep code
 
         queue.skips.push(inter.user.id)
 

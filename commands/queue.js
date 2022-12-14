@@ -60,21 +60,58 @@ module.exports = {
         var listener = async interaction => {
             if (!interaction.isButton()) { return }
 
+            if (inter.user !== interaction.user) {
+                try {
+                    interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
+                } catch (err) {
+                    console.log(err)
+                }
+                return
+            }
+
             for (const x of buttonText) {
                 const cid = interaction.customId
 
                 if ('queue'+x === cid) {
                     if (cid === 'queue'+buttonText[0]) { // <<
-                        if (currentPage-10 < 1) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
+                        if (currentPage-10 < 1) { 
+                            try {
+                                await interaction.reply({content: 'you cannot go to that page', ephemeral: true})
+                            } catch (err) {
+                                console.error(err)
+                            }
+                            return
+                        }
                         currentPage -= 10
                     } else if (cid === 'queue'+buttonText[1]) { // <
-                        if (currentPage === maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
+                        if (currentPage-1 < 1) { 
+                            try {
+                                await interaction.reply({content: 'you cannot go to that page', ephemeral: true})
+                            } catch (err) {
+                                console.error(err)
+                            }
+                            return
+                        }
                         currentPage -= 1
                     } else if (cid === 'queue'+buttonText[2]) { // >
-                        if (currentPage === maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
+                        if (currentPage+1 > maxPages) { 
+                            try {
+                                await interaction.reply({content: 'you cannot go to that page', ephemeral: true})
+                            } catch (err) {
+                                console.error(err)
+                            }
+                            return
+                        }
                         currentPage += 1
                     } else if (cid === 'queue'+buttonText[3]) {// >>
-                        if (currentPage+10 > maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
+                        if (currentPage+10 > maxPages) { 
+                            try {
+                                await interaction.reply({content: 'you cannot go to that page', ephemeral: true})
+                            } catch (err) {
+                                console.error(err)
+                            }
+                            return
+                        }
                         currentPage += 10
                     }
 
