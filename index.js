@@ -1,8 +1,9 @@
 const fs = require('node:fs')
 const path = require('node:path')
 
-const { Client, GatewayIntentBits, Partials, Events } = require('discord.js');
-const { token } = require('./config.json');
+const { Client, GatewayIntentBits, Partials, Events, Collection } = require('discord.js');
+const { Player } = require('discord-player')
+const { token } = require('./config')
 
 const client = new Client({
     intents: [
@@ -10,12 +11,22 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMessageReactions,
-    ],
-    partials: [
-        Partials.Message,
-        Partials.Reaction,
+        GatewayIntentBits.GuildVoiceStates,
     ]
 });
+
+client.player = new Player(client, {
+    ytdlOptions: {
+        quality: 'highestaudio',
+        highWaterMark: 1 << 25
+    }
+})
+
+// cannot have player events in events folder so they must be in index.js
+client.player.on('trackStart', (queue, track) => {
+    const trackTitleStr = "`" + track.title + "`"
+    queue.metadata.channel.send(`now playing ${trackTitleStr}`)
+})
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('js'));
@@ -30,6 +41,7 @@ for (const file of eventFiles) {
     }
 }
 
+// create config.json file and set your token variable
 client.login(token);
 
 client.commands = new Collection();
