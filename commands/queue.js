@@ -21,7 +21,7 @@ module.exports = {
 
             if (page === 1) {
                 const np = queue.nowPlaying()
-                if (!np === undefined) {
+                if (np) {
                     const pos = queue.getPlayerTimestamp()
                     msg += 'Currently playing: `' + np.title + '` `' + `${pos['current']}/${pos['end']}` + '` [link]'+ `(${np.url})` +'\nauthor: `' + np.author + '` \n\n'
                 }
@@ -67,33 +67,29 @@ module.exports = {
                     if (cid === 'queue'+buttonText[0]) { // <<
                         if (currentPage-10 < 1) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
                         currentPage -= 10
-                        if (getQueue(currentPage) === '') {
-                            currentPage = 1
-                        }
                     } else if (cid === 'queue'+buttonText[1]) { // <
                         if (currentPage === maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
                         currentPage -= 1
-                        if (getQueue(currentPage) === '') {
-                            currentPage = 1
-                        }
                     } else if (cid === 'queue'+buttonText[2]) { // >
                         if (currentPage === maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
                         currentPage += 1
-                        if (getQueue(currentPage) === '') {
-                            currentPage = 1
-                        }
                     } else if (cid === 'queue'+buttonText[3]) {// >>
                         if (currentPage+10 > maxPages) { return await interaction.reply({content: 'you cannot go to that page', ephemeral: true}) }
                         currentPage += 10
-                        if (getQueue(currentPage) === '') {
-                            currentPage = 1
-                        }
+                    }
+
+                    if (getQueue(currentPage).length < 1) {
+                        currentPage = 1
                     }
                     const newEmbed = new EmbedBuilder()
                             .setTitle(`Queue for ${inter.guild.name}`)
                             .setDescription(getQueue(currentPage))
                             .setFooter({text: `page ${currentPage} of ${maxPages} pages`})
-                    await interaction.update({embeds: [newEmbed]})
+                    try {
+                        await interaction.update({embeds: [newEmbed]})
+                    } catch (err) {
+                        console.error(err)
+                    }
                 }
             }
         }

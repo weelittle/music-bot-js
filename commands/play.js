@@ -42,32 +42,34 @@ module.exports = {
             return await inter.reply({content: 'could not join vc', ephemeral: true});
         }
         
+        await inter.deferReply()
+
         if (query.includes('https://') && !query.includes('&list')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_VIDEO
             })
             if (result.tracks.length === 0) {
-                return inter.reply({content: `no results for query ${queryStr}`, ephemeral: true})
+                return inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
             }
             const song = result.tracks[0]
             await queue.addTrack(song)
 
             const titleStr = "`" + song.title + "`"
-            inter.reply(`track ${titleStr} added to queue`)
+            inter.editReply(`track ${titleStr} added to queue`)
         } else if (query.includes('https://') && query.includes('&list')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST
             })
             if (result.tracks.length === 0) {
-                return inter.reply({content: `no results for query ${queryStr}`, ephemeral: true})
+                return inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
             }
             const playlist = result.playlist
             await queue.addTracks(result.tracks)
 
             const titleStr = "`" + playlist.title + "`"
-            await inter.reply(`playlist ${titleStr} added (${result.tracks.length} songs)`)
+            await inter.editReply(`playlist ${titleStr} added (${result.tracks.length} songs)`)
         } else {
             const result = await player.search(query, {
                 requestedBy: inter.user,
@@ -110,7 +112,7 @@ module.exports = {
                 if (row.components.length === 5) { row2.addComponents(button) } else { row.addComponents(button) }
             }
 
-            await inter.reply({embeds: [embed], components: [row, row2]})
+            await inter.editReply({embeds: [embed], components: [row, row2]})
             
             let responded = false
             let msg
