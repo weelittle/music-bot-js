@@ -1,5 +1,5 @@
 const fs = require('fs')
-const path = require('node:path')
+const path = require('path')
 
 const { Client, GatewayIntentBits, Partials, Events, Collection } = require('discord.js');
 const { Player } = require('discord-player')
