@@ -50,20 +50,20 @@ module.exports = {
                 searchEngine: QueryType.YOUTUBE_VIDEO
             })
             if (result.tracks.length === 0) {
-                return inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
+                return await inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
             }
             const song = result.tracks[0]
             await queue.addTrack(song)
 
             const titleStr = "`" + song.title + "`"
-            inter.editReply(`track ${titleStr} added to queue`)
+            await inter.editReply(`track ${titleStr} added to queue`)
         } else if (query.includes('https://') && query.includes('&list')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST
             })
             if (result.tracks.length === 0) {
-                return inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
+                return await inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
             }
             const playlist = result.playlist
             await queue.addTracks(result.tracks)
@@ -123,7 +123,7 @@ module.exports = {
 
                 if (inter.user !== interaction.user) {
                     try {
-                        interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
+                        await interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
                     } catch (err) {
                         console.log(err)
                     }
@@ -137,7 +137,7 @@ module.exports = {
                         if (cid !== 'play'+buttonText[5] && cid !== 'play'+buttonText[6]) { // not < or >
                             const offset = (currentPage-1)*5
                             const song = result.tracks[(parseInt(x)+offset)-1]
-                            if (song === undefined) { return interaction.reply({content: 'this song does not exist', ephemeral: true}) }
+                            if (song === undefined) { return await interaction.reply({content: 'this song does not exist', ephemeral: true}) }
                             responded = true
                             await inter.editReply({content: 'added `' + song.title + '` to queue', embeds: [], components: []})
 
@@ -147,7 +147,7 @@ module.exports = {
                             client.removeListener('interactionCreate', listener)
                         } else if (cid === 'play'+buttonText[5]) { // <
                             msg = interaction.message
-                            if (currentPage === 1) { return interaction.reply({content: 'you cannot go that way', ephemeral: true})}
+                            if (currentPage === 1) { return await interaction.reply({content: 'you cannot go that way', ephemeral: true})}
                             currentPage -= 1
                             const newEmbed = new EmbedBuilder()
                                 .setTitle(`Search Results (${result.tracks.length})`)
@@ -156,7 +156,7 @@ module.exports = {
                             await interaction.update({embeds: [newEmbed]})
                         } else if (cid === 'play'+buttonText[6]) { // >
                             msg = interaction.message
-                            if (currentPage === maxPages) { return interaction.reply({content: 'you cannot go that way', ephemeral: true})}
+                            if (currentPage === maxPages) { return await interaction.reply({content: 'you cannot go that way', ephemeral: true})}
                             currentPage += 1
                             const newEmbed = new EmbedBuilder()
                                 .setTitle(`Search Results for ${query} (${result.tracks.length})`)

@@ -62,7 +62,7 @@ module.exports = {
 
             if (inter.user !== interaction.user) {
                 try {
-                    interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
+                    await interaction.reply({content: 'you cannot interact with someone elses message', ephemeral: true})
                 } catch (err) {
                     console.log(err)
                 }
