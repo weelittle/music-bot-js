@@ -57,7 +57,7 @@ module.exports = {
 
             const titleStr = "`" + song.title + "`"
             await inter.editReply(`track ${titleStr} added to queue`)
-        } else if (query.includes('https://') && query.includes('&list')) {
+        } else if (query.includes('https://') && (query.includes('&list') || query.includes('?list'))) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST

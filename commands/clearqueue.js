@@ -6,8 +6,8 @@ module.exports = {
         .setDescription('clears the queue (perms required)')
         .setDMPermission(false),
     async execute(inter) {
-        if (!inter.member.permissions.has([PermissionsBitField.Flags.ManageGuild])) { 
-            return await inter.reply({content: 'you do not have permission to use this command', ephemeral: true})
+        if (!inter.member.permissions.has([PermissionsBitField.Flags.ManageChannels])) { 
+            return await inter.reply({content: 'you do not have permission to use this command (manage channels)', ephemeral: true})
         }
 
         const player = inter.client.player

@@ -17,7 +17,7 @@ module.exports = {
         const num = inter.options.getInteger('destination')
 
         if (!inter.member.permissions.has([PermissionsBitField.Flags.ManageChannels])) {
-            return await inter.reply({content: 'you do not have permission to run this command', ephemeral: true})
+            return await inter.reply({content: 'you do not have permission to run this command (manage channels)', ephemeral: true})
         }
 
         if (!queue.tracks[num-1]) {
