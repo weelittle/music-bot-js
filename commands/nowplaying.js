@@ -10,6 +10,8 @@ module.exports = {
         const player = client.player
         const queue = player.getQueue(inter.guild)
 
+        if (!queue) { return await inter.reply({content: 'there is currently no queue', ephemeral: true}) }
+
         const np = queue.nowPlaying()
 
         if (!np) { return await inter.reply({content: 'i am currently not playing anything', ephemeral: true}) }
