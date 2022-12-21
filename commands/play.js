@@ -44,7 +44,7 @@ module.exports = {
         
         await inter.deferReply()
 
-        if (query.includes('https://') && !query.includes('&list')) {
+        if (query.includes('https://') && (!query.includes('&list') || !query.includes('?list')) && query.includes('youtu')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_VIDEO
@@ -57,7 +57,8 @@ module.exports = {
 
             const titleStr = "`" + song.title + "`"
             await inter.editReply(`track ${titleStr} added to queue`)
-        } else if (query.includes('https://') && (query.includes('&list') || query.includes('?list'))) {
+
+        } else if (query.includes('https://') && (query.includes('&list') || query.includes('?list')) && query.includes('youtu')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST
@@ -70,6 +71,35 @@ module.exports = {
 
             const titleStr = "`" + playlist.title + "`"
             await inter.editReply(`playlist ${titleStr} added (${result.tracks.length} songs)`)
+
+        } else if (query.includes('https://open.spotify.com/track')) {
+            const result = await player.search(query, {
+                requestedBy: inter.user,
+                searchEngine: QueryType.SPOTIFY_SONG
+            })
+            if (result.tracks.length === 0) {
+                return await inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
+            }
+            const song = result.tracks[0]
+            await queue.addTrack(song)
+
+            const titleStr = '`' + song.title + '`'
+            await inter.editReply(`track ${titleStr} added to queue`)
+
+        } else if (query.includes('https://open.spotify.com/playlist')) {
+            const result = await player.search(query, {
+                requestedBy: inter.user,
+                searchEngine: QueryType.SPOTIFY_PLAYLIST
+            })
+            if (result.tracks.length === 0) {
+                return await inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
+            }
+            const playlist = result.playlist
+            await queue.addTracks(result.tracks)
+
+            const titleStr = "`" + playlist.title + "`"
+            await inter.editReply(`playlist ${titleStr} added (${result.tracks.length} songs)`)
+
         } else {
             const result = await player.search(query, {
                 requestedBy: inter.user,
