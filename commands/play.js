@@ -86,7 +86,7 @@ module.exports = {
             const titleStr = '`' + song.title + '`'
             await inter.editReply(`track ${titleStr} added to queue`)
 
-        } else if (query.includes('https://open.spotify.com/playlist')) {
+        } else if (query.includes('https://open.spotify.com/playlist')) {  //spotify playlists currently do not work rn
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.SPOTIFY_PLAYLIST
@@ -94,6 +94,7 @@ module.exports = {
             if (result.tracks.length === 0) {
                 return await inter.editReply({content: `no results for query ${queryStr}`, ephemeral: true})
             }
+            console.log(result)
             const playlist = result.playlist
             await queue.addTracks(result.tracks)
 
