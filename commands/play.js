@@ -44,7 +44,7 @@ module.exports = {
         
         await inter.deferReply()
 
-        if (query.includes('https://') && (!query.includes('&list') || !query.includes('?list')) && query.includes('youtu')) {
+        if (query.includes('https://') && query.includes('&list') && query.includes('?list') && query.includes('youtu')) {
             const result = await player.search(query, {
                 requestedBy: inter.user,
                 searchEngine: QueryType.YOUTUBE_VIDEO
